@@ -1,0 +1,29 @@
+{
+  "name": "scoutingcode",
+  "version": "1.0.0",
+  "description": "FRC team history explorer using The Blue Alliance API",
+  "main": "server.js",
+  "bin": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build": "npx pkg . --targets node18-win-x64 --output scouting-app.exe"
+  },
+  "keywords": [
+    "frc",
+    "blue-alliance",
+    "scouting"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1"
+  },
+  "pkg": {
+    "assets": [
+      ".env",
+      "public/**/*"
+    ]
+  }
+}

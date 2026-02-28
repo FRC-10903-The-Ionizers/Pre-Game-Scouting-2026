@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FRC Team History Explorer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <main class="app-shell">
+      <section class="hero-card">
+        <p class="eyebrow">Blue Alliance Data Studio</p>
+        <h1>FRC Team History Explorer</h1>
+        <p class="subhead">
+          Pull complete event history from 1999 to today, view in a scouting-ready table, and copy directly into Google Sheets.
+        </p>
+
+        <form id="searchForm" class="search-form">
+          <label for="teamNumber" class="sr-only">Team Numbers</label>
+          <input
+            id="teamNumber"
+            name="teamNumber"
+            type="text"
+            autocomplete="off"
+            placeholder="Enter team numbers (e.g. 254, 1678, 1114)"
+            required
+          />
+          <label for="teamFile" class="file-upload">
+            <span id="teamFileLabel">Upload CSV/TXT for teams</span>
+          </label>
+          <input id="teamFile" type="file" accept=".csv,.tsv,.txt" class="hidden-file-input" />
+          <button id="searchBtn" type="submit">Load History</button>
+        </form>
+
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+      </section>
+
+      <section id="resultsSection" class="results hidden">
+        <div class="results-head">
+          <div>
+            <h2 id="teamTitle">Team</h2>
+            <p id="teamMeta" class="team-meta"></p>
+          </div>
+          <div class="actions">
+            <button id="copyTeamRowBtn" class="ghost">Copy Rows TSV</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table id="historyTable">
+            <thead id="historyThead"></thead>
+            <tbody id="historyTbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
