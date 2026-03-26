@@ -50,6 +50,10 @@ function formatCompetitionDate(event) {
   return start || end || '';
 }
 
+function formatEventLocation(event) {
+  return [event.city, event.stateProv, event.country].filter(Boolean).join(', ');
+}
+
 function flattenEvents(payload) {
   const events = [];
   for (const yearData of payload.years) {
@@ -162,13 +166,14 @@ function buildTsvRow(teamData, compSlots) {
   for (let i = 0; i < compSlots; i += 1) {
     const event = teamData.events[i];
     if (!event) {
-      row.push('', '', '', '', '', '');
+      row.push('', '', '', '', '', '', '');
       continue;
     }
 
     const name = `${event.year} ${event.eventName}`.trim();
     const date = formatCompetitionDate(event);
     row.push(date ? `${name} (${date})` : name);
+    row.push(formatEventLocation(event));
     row.push(event.awards || '');
     row.push(event.rank ?? '');
     row.push(event.alliance || '');
@@ -199,8 +204,8 @@ function renderTable(teamDataRows) {
   const subHeaderCells = ['<th>Number</th>', '<th>Name</th>', '<th>Rookie Year</th>', '<th>Robot</th>', '<th>Impact</th>', '<th>Other</th>'];
 
   for (let i = 0; i < maxComps; i += 1) {
-    groupHeaderCells.push(`<th colspan="6">Comp ${i + 1}</th>`);
-    subHeaderCells.push('<th>Name</th>', '<th>Awards</th>', '<th>Rank</th>', '<th>Alliance</th>', '<th>Position</th>', '<th>Elim</th>');
+    groupHeaderCells.push(`<th colspan="7">Comp ${i + 1}</th>`);
+    subHeaderCells.push('<th>Name</th>', '<th>Location</th>', '<th>Awards</th>', '<th>Rank</th>', '<th>Alliance</th>', '<th>Position</th>', '<th>Elim</th>');
   }
 
   historyThead.innerHTML = `<tr>${groupHeaderCells.join('')}</tr><tr>${subHeaderCells.join('')}</tr>`;
@@ -211,7 +216,7 @@ function renderTable(teamDataRows) {
     const tr = document.createElement('tr');
 
     if (teamData.isError) {
-      tr.innerHTML = `<td>${escapeCell(teamData.teamNumber)}</td><td colspan="${5 + maxComps * 6}">${escapeCell(teamData.errorMessage)}</td>`;
+      tr.innerHTML = `<td>${escapeCell(teamData.teamNumber)}</td><td colspan="${5 + maxComps * 7}">${escapeCell(teamData.errorMessage)}</td>`;
       historyTbody.appendChild(tr);
       state.tsvRows.push(buildTsvRow(teamData, maxComps));
       continue;
@@ -232,17 +237,19 @@ function renderTable(teamDataRows) {
     for (let i = 0; i < maxComps; i += 1) {
       const event = teamData.events[i];
       if (!event) {
-        compCells.push('<td></td><td></td><td></td><td></td><td></td><td></td>');
+        compCells.push('<td></td><td></td><td></td><td></td><td></td><td></td><td></td>');
         continue;
       }
       const nameLabel = `${event.year} ${event.eventName}`.trim();
       const dateLabel = formatCompetitionDate(event);
+      const locationLabel = formatEventLocation(event);
       const nameCell = dateLabel
         ? `${escapeCell(nameLabel)}<div class="comp-date">${escapeCell(dateLabel)}</div>`
         : escapeCell(nameLabel);
 
       compCells.push(
         `<td>${nameCell}</td>`,
+        `<td>${escapeCell(locationLabel)}</td>`,
         `<td>${escapeCell(event.awards || '')}</td>`,
         `<td>${escapeCell(event.rank ?? '')}</td>`,
         `<td>${escapeCell(event.alliance || '')}</td>`,
